@@ -1,0 +1,120 @@
+{
+  "name": "Daily Weather to Notion",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 24
+            }
+          ]
+        }
+      },
+      "id": "schedule-trigger",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -432,
+        -32
+      ],
+      "webhookId": null
+    },
+    {
+      "parameters": {
+        "url": "https://api.open-meteo.com/v1/forecast?latitude=37.5665&longitude=126.9780&current=temperature_2m,relative_humidity_2m,weather_code,wind_speed_10m&timezone=Asia%2FSeoul",
+        "options": {}
+      },
+      "id": "http-request",
+      "name": "HTTP Request - Weather API",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        -144,
+        -32
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Open-Meteo API 응답을 Notion 속성 구조에 맞게 가공\nconst weather = $input.first().json.current;\nconst units = $input.first().json.current_units;\n\n// WMO Weather Code 매핑\nconst weatherCodeMap = {\n  0: 'Clear sky',\n  1: 'Mainly clear',\n  2: 'Partly cloudy',\n  3: 'Overcast',\n  45: 'Fog',\n  48: 'Depositing rime fog',\n  51: 'Light drizzle',\n  53: 'Moderate drizzle',\n  55: 'Dense drizzle',\n  61: 'Slight rain',\n  63: 'Moderate rain',\n  65: 'Heavy rain',\n  71: 'Slight snow fall',\n  73: 'Moderate snow fall',\n  75: 'Heavy snow fall',\n  80: 'Slight rain showers',\n  81: 'Moderate rain showers',\n  82: 'Violent rain showers',\n  95: 'Thunderstorm',\n  96: 'Thunderstorm with slight hail',\n  99: 'Thunderstorm with heavy hail'\n};\n\nconst weatherDescription = weatherCodeMap[weather.weather_code] || 'Unknown';\n\nreturn [{\n  json: {\n    properties: {\n      '날짜': {\n        title: [\n          {\n            text: {\n              content: weather.time\n            }\n          }\n        ]\n      },\n      '날씨': {\n        rich_text: [\n          {\n            text: {\n              content: weatherDescription\n            }\n          }\n        ]\n      },\n      '기온(°C)': {\n        number: weather.temperature_2m\n      },\n      '습도(%)': {\n        number: weather.relative_humidity_2m\n      },\n      '풍속(km/h)': {\n        number: weather.wind_speed_10m\n      }\n    }\n  }\n}];"
+      },
+      "id": "code-transform",
+      "name": "Code - Notion Property 변환",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        144,
+        -32
+      ]
+    },
+    {
+      "parameters": {
+        "pageId": {
+          "__rl": true,
+          "mode": "url",
+          "value": ""
+        },
+        "options": {}
+      },
+      "id": "notion-create",
+      "name": "Notion - 페이지 생성",
+      "type": "n8n-nodes-base.notion",
+      "typeVersion": 2,
+      "position": [
+        384,
+        -32
+      ]
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request - Weather API",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request - Weather API": {
+      "main": [
+        [
+          {
+            "node": "Code - Notion Property 변환",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code - Notion Property 변환": {
+      "main": [
+        [
+          {
+            "node": "Notion - 페이지 생성",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "98be08ad-bb6e-457c-8beb-ec4e5f04bd2b",
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": "12ce209bf390e75c0c230063a744090d004b51446e91b28d5f669aafae37e6b3"
+  },
+  "nodeGroups": [],
+  "id": "dW1eKQ3mN7vR4tLz",
+  "tags": []
+}

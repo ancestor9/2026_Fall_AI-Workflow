@@ -1,0 +1,441 @@
+{
+  "name": "KBU Unified AI Agent Workflow",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -784,
+        112
+      ],
+      "id": "f0b4619c-052b-4686-859f-fe7c73c4887a",
+      "name": "When clicking 'Execute workflow'"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f1",
+              "name": "장학금수여",
+              "value": "Y",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -112,
+        -16
+      ],
+      "id": "8b00932e-22f8-4a59-be6e-8de13b62c450",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f2",
+              "name": "장학금수여",
+              "value": "N",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -112,
+        192
+      ],
+      "id": "82f34d11-ac46-4a1d-862d-2eae5f035b16",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        112,
+        96
+      ],
+      "id": "226e295a-3287-4f66-8067-e1d5c45e2b37",
+      "name": "Merge"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "c1",
+              "leftValue": "={{ $json['장학금수여'] }}",
+              "rightValue": "Y",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        336,
+        96
+      ],
+      "id": "565fc7e5-430c-4fa5-8464-27e70599066e",
+      "name": "Filter"
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        560,
+        96
+      ],
+      "id": "df912623-48f0-4e6a-8793-88c251185d3a",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "promptField",
+              "name": "data",
+              "value": "={{$json.data}}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        768,
+        96
+      ],
+      "id": "0f041dce-690a-49d6-94cd-6f89482f64e3",
+      "name": "Edit Fields2"
+    },
+    {
+      "parameters": {
+        "agent": "conversationalAgent",
+        "promptType": "define",
+        "text": "=장학금 수여 대상자 {{ $json.data }}",
+        "options": {
+          "systemMessage": "너는 경복대학교 행정실 직원으로써 매 학기마다 장학금 수여 대상자에 대한 공고문을 게시판에 올리는 업무를 하고 있다.\n\n장학금 수여 대상자 목록을 전달 받아서 오늘날짜 {{ $now }} 기준으로 공고문을 완성해.\n\n* 장학금 수여자 공고 참고 샘플\n\n[경복대학교 장학금 수여 대상자 안내 공고]\n\n안녕하세요, 경복대학교 행정실입니다.\n\n2023년 기준 장학금 수여 대상자 명단을 아래와 같이 안내해 드립니다.\n\n[장학금 수여 대상자 목록]\n1. 학번: *****| 이름: Zaphod Beeblebrox  | 이메일: captain@heartofgold.com| 국적 : KR\n2. 학번: *****| 이름: Edmund Pevensie | 이메일: edmund@narnia.gov |국적 : FR\n\n대상자로 선정되신 학생 여러분을 진심으로 축하드리며, 장학금 지급과 관련된 세부 절차는 개별 안내를 확인해 주시기 바랍니다.\n\n감사합니다.\n\n경복대학교 행정실"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        976,
+        96
+      ],
+      "id": "f296143a-3d62-4d27-a81b-e43e7bb5d008",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-3.5-flash-lite",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        896,
+        304
+      ],
+      "id": "31b2745a-6c44-4d50-95a8-e9a4722d7f2b",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "nOcvjPQrikCcdnUb",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "outField",
+              "name": "emailBody",
+              "value": "={{ $json.output }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1328,
+        96
+      ],
+      "id": "439c4590-9237-4f5e-a33a-440e7262c743",
+      "name": "Edit Fields3"
+    },
+    {
+      "parameters": {
+        "sendTo": "ancestor9@kbu.ac.kr",
+        "subject": "[공지] 주요 안내 사항 공고",
+        "message": "={{ $json.emailBody }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1536,
+        96
+      ],
+      "id": "33995e11-759d-4e22-a173-0398283b87cf",
+      "name": "Send a message",
+      "webhookId": "4f234f23-64e9-41c9-9c6b-7539d3a6704b",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "rpEcwuvSvyGKaaYQ",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "getAllPeople"
+      },
+      "type": "n8n-nodes-base.n8nTrainingCustomerDatastore",
+      "typeVersion": 1,
+      "position": [
+        -560,
+        112
+      ],
+      "id": "f3721edb-0365-4ebf-98d3-8de051efca32",
+      "name": "Customer Datastore (n8n training)1"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "a8e0d9ca-1506-452f-845d-de627cd41eeb",
+              "leftValue": "={{ $json.country }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "empty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "e6bcbca1-0711-487c-bfd0-a6e2f2080220",
+              "leftValue": "={{ $json.country }}",
+              "rightValue": "UK",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        -352,
+        112
+      ],
+      "id": "58e1bdef-10af-4fbf-801f-f927b5592eaa",
+      "name": "If"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking 'Execute workflow'": {
+      "main": [
+        [
+          {
+            "node": "Customer Datastore (n8n training)1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields3",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields3": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Customer Datastore (n8n training)1": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "ac248a98-985f-4bd7-a657-0a7b740a6f3b",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "12ce209bf390e75c0c230063a744090d004b51446e91b28d5f669aafae37e6b3"
+  },
+  "nodeGroups": [],
+  "id": "B6wCCubTdvlfO9Oi",
+  "tags": []
+}

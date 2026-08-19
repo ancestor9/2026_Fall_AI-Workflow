@@ -1,0 +1,663 @@
+{
+  "name": "뉴스 수집 및 감성분석 자동화 Workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "weeks",
+              "triggerAtDay": [
+                "1"
+              ],
+              "triggerAtHour": 9
+            }
+          ]
+        }
+      },
+      "id": "b2c7b1b4-1fb9-4fda-8be4-a2bc6edebd3b",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -800,
+        96
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "key_val",
+              "name": "init",
+              "value": "start",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "9bd7787c-c18f-40e1-841b-504580943e7b",
+      "name": "key",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -624,
+        96
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://news.google.com/rss/search?q=AI+%EB%8F%99%ED%96%A5&hl=ko&gl=KR&ceid=KR:ko",
+        "options": {}
+      },
+      "id": "fab69c54-d59a-453c-bacb-4f272d41ff5c",
+      "name": "ai news",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.1,
+      "position": [
+        -400,
+        -48
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "date-filter-14d",
+              "leftValue": "={{ new Date($json.pubDate) }}",
+              "rightValue": "={{ new Date($now.minus({ days: 1 })) }}",
+              "operator": {
+                "type": "dateTime",
+                "operation": "after"
+              }
+            },
+            {
+              "id": "4f80fbc8-890a-41cc-bb90-9587181348ec",
+              "leftValue": "",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "61670651-fc26-4f62-8280-9478f20a9a1c",
+      "name": "Filter",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        -240,
+        -48
+      ]
+    },
+    {
+      "parameters": {
+        "url": "https://news.google.com/rss/search?q=%EA%B2%BD%EB%B3%B5%EB%8C%80%ED%95%99%EA%B5%90&hl=ko&gl=KR&ceid=KR:ko",
+        "options": {}
+      },
+      "id": "f0a2f7e2-854a-4f53-a505-0062d4104c28",
+      "name": "경복대학교뉴스",
+      "type": "n8n-nodes-base.rssFeedRead",
+      "typeVersion": 1.1,
+      "position": [
+        -400,
+        272
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "date-filter-7d",
+              "leftValue": "={{ new Date($json.pubDate) }}",
+              "rightValue": "={{ new Date($now.minus({ days: 1 })) }}",
+              "operator": {
+                "type": "dateTime",
+                "operation": "after"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "d4aaca6b-6cec-4514-8138-592a5ead343e",
+      "name": "Filter1",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        -240,
+        272
+      ]
+    },
+    {
+      "parameters": {
+        "inputText": "={{ $json.title + '\\n' + $json.contentSnippet }}",
+        "options": {}
+      },
+      "id": "10484930-74f2-48b7-8126-4051f4a55204",
+      "name": "Sentiment Analysis1",
+      "type": "@n8n/n8n-nodes-langchain.sentimentAnalysis",
+      "typeVersion": 1,
+      "position": [
+        48,
+        -64
+      ],
+      "retryOnFail": true,
+      "waitBetweenTries": 1500
+    },
+    {
+      "parameters": {
+        "inputText": "={{ $json.title + '\\n' + $json.contentSnippet }}",
+        "options": {}
+      },
+      "id": "f4303ce9-e813-4831-bc03-0f7b3f89862a",
+      "name": "Sentiment Analysis",
+      "type": "@n8n/n8n-nodes-langchain.sentimentAnalysis",
+      "typeVersion": 1,
+      "position": [
+        48,
+        256
+      ],
+      "retryOnFail": true,
+      "waitBetweenTries": 1500
+    },
+    {
+      "parameters": {},
+      "id": "4d0a2e29-1fe9-438e-a8f1-97081c944fff",
+      "name": "Merge",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        384,
+        -48
+      ]
+    },
+    {
+      "parameters": {},
+      "id": "b7a3f781-c210-4262-8ec5-b0a5e1a3324c",
+      "name": "Merge1",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        336,
+        256
+      ]
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "destinationFieldName": "ai_articles",
+        "options": {}
+      },
+      "id": "154a624e-e000-431a-8c42-3184c389bd10",
+      "name": "Aggregate",
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        544,
+        -48
+      ]
+    },
+    {
+      "parameters": {
+        "aggregate": "aggregateAllItemData",
+        "destinationFieldName": "kyungbok_articles",
+        "options": {}
+      },
+      "id": "3ca43794-e4af-4776-a757-844d8adb9302",
+      "name": "Aggregate1",
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        512,
+        256
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "combine",
+        "combineBy": "combineByPosition",
+        "options": {}
+      },
+      "id": "3fdd21ac-511c-49bd-af84-32380cb6234b",
+      "name": "Merge2",
+      "type": "n8n-nodes-base.merge",
+      "typeVersion": 3,
+      "position": [
+        704,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=수집된 뉴스를 바탕으로 AI 동향과 경복대학교 뉴스를 구분하여 핵심 내용을 요약해주세요.\n\n각 뉴스 항목별로 [긍정 / 중립 / 부정] 감성 분류 결과를 명시하고, 종합 리포트 형태로 이메일 본문을 작성해주세요.\n\n[AI 동향 뉴스 Data]\n{{ JSON.stringify($json.ai_articles) }}\n\n[경복대학교 뉴스 Data]\n{{ JSON.stringify($json.kyungbok_articles) }}",
+        "options": {}
+      },
+      "id": "b2bd0b5a-9e08-40d3-9f8b-ae9d28bdd199",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        848,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "subject_field",
+              "name": "emailSubject",
+              "value": "=[뉴스 모니터링] AI 동향 및 경복대학교 주간/격주 요약 보고서",
+              "type": "string"
+            },
+            {
+              "id": "body_field",
+              "name": "emailBody",
+              "value": "={{ $json.output }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "a097e53a-01d3-4fad-afab-af27b793ce94",
+      "name": "Edit Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1136,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-3.5-flash-lite",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -48,
+        432
+      ],
+      "id": "27f95c4a-bd61-40b6-9217-4bde48c15052",
+      "name": "Google Gemini Chat Model2",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "nOcvjPQrikCcdnUb",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-3.5-flash-lite",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        -48,
+        112
+      ],
+      "id": "e4169944-4ec4-40fb-96b0-3270ad7ddc98",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "nOcvjPQrikCcdnUb",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-3.5-flash-lite",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        752,
+        304
+      ],
+      "id": "9ec5e286-5260-467c-b4b5-1b1ee83a5cc7",
+      "name": "Google Gemini Chat Model3",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "nOcvjPQrikCcdnUb",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "ancestor9@kbu.ac.kr",
+        "subject": "[공지] 주요 안내 사항 공고",
+        "message": "={{ $json.emailBody }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1280,
+        80
+      ],
+      "id": "2fbae08c-ddb0-484b-ae62-c35388817447",
+      "name": "Send a message1",
+      "webhookId": "4f234f23-64e9-41c9-9c6b-7539d3a6704b",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "rpEcwuvSvyGKaaYQ",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "maxItems": 3
+      },
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        -96,
+        -48
+      ],
+      "id": "e5418df4-c8b4-4bb1-b8a7-e109d14a558c",
+      "name": "Limit"
+    },
+    {
+      "parameters": {
+        "maxItems": 3
+      },
+      "type": "n8n-nodes-base.limit",
+      "typeVersion": 1,
+      "position": [
+        -96,
+        272
+      ],
+      "id": "8b837001-6a75-4ebc-973d-a11f217b61df",
+      "name": "Limit1"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "key",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "key": {
+      "main": [
+        [
+          {
+            "node": "ai news",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "경복대학교뉴스",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ai news": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "Limit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sentiment Analysis1": {
+      "main": [
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Merge",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Merge2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "경복대학교뉴스": {
+      "main": [
+        [
+          {
+            "node": "Filter1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter1": {
+      "main": [
+        [
+          {
+            "node": "Limit1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Sentiment Analysis": {
+      "main": [
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Merge1",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge1": {
+      "main": [
+        [
+          {
+            "node": "Aggregate1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate1": {
+      "main": [
+        [
+          {
+            "node": "Merge2",
+            "type": "main",
+            "index": 1
+          }
+        ]
+      ]
+    },
+    "Merge2": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Send a message1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Sentiment Analysis",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Sentiment Analysis1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model3": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit": {
+      "main": [
+        [
+          {
+            "node": "Sentiment Analysis1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Limit1": {
+      "main": [
+        [
+          {
+            "node": "Sentiment Analysis",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "d1b44efd-9cf7-4f09-9b66-55916880b315",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "12ce209bf390e75c0c230063a744090d004b51446e91b28d5f669aafae37e6b3"
+  },
+  "nodeGroups": [],
+  "id": "QKljT7Y6cL5GS9YP",
+  "tags": []
+}

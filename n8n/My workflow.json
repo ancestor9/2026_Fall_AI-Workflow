@@ -1,0 +1,808 @@
+{
+  "name": "My workflow",
+  "nodes": [
+    {
+      "parameters": {
+        "path": "b4d50bb2-88b8-4f78-b3bf-e9b10e0e0cd2",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -976,
+        176
+      ],
+      "id": "32b9cce5-e196-4653-949b-0980f4c518ad",
+      "name": "Webhook",
+      "webhookId": "b4d50bb2-88b8-4f78-b3bf-e9b10e0e0cd2"
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "filters": {}
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -976,
+        -48
+      ],
+      "id": "394d2cff-ef1d-4b40-b374-b37fe647a921",
+      "name": "Gmail Trigger",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "rpEcwuvSvyGKaaYQ",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "formTitle": "사용자 정보 입력 폼",
+        "formDescription": "정보를 입력하고 제출해 주세요.",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "이름",
+              "fieldType": "string"
+            },
+            {
+              "fieldLabel": "이메일",
+              "fieldType": "email"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        0,
+        -304
+      ],
+      "id": "aa7d390d-9abd-41fa-b2dc-90b7734606e9",
+      "name": "On form submission",
+      "webhookId": "20779eed-e856-434f-8ee0-95bd64755b05"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1f78be14-1fd2-4106-a200-4551dfad0cc1",
+              "name": "이름",
+              "value": "={{ $json['이름'] }}",
+              "type": "string"
+            },
+            {
+              "id": "69ef100c-01b0-4562-a488-e0a8ed81cf46",
+              "name": "",
+              "value": "",
+              "type": "string"
+            },
+            {
+              "id": "04daf321-3678-4e9c-983d-47aa05a68a01",
+              "name": "이름",
+              "value": "={{ $json['이름'] }} {{ $json['이메일'] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        352,
+        -400
+      ],
+      "id": "d621bb04-9148-49ab-9375-6ba5d616c432",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "// Add a new field called 'myNewField' to the JSON of the item\n// 새로운 필드 추가예시\n$input.item.json.status = \"완료\";\n$input.item.json.greeting = $input.item.json.이름 + \"님 환영합니다!\";\n\nreturn $input.item;"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        352,
+        -224
+      ],
+      "id": "8ab77cd1-692c-46df-8b42-1955f87062c9",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "url": "https://api.openweathermap.org/data/2.5/weather",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            {
+              "name": "q",
+              "value": "seoul"
+            },
+            {
+              "name": "appid",
+              "value": "390d8404dfe2324ed857871687db6eb1"
+            },
+            {
+              "name": "units",
+              "value": "metric"
+            },
+            {
+              "name": "lang",
+              "value": "kr"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        16,
+        -32
+      ],
+      "id": "5fc94d39-8079-4c07-8d1a-4914ecf92251",
+      "name": "HTTP Request"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -1296,
+        -304
+      ],
+      "id": "7b0e6b82-580f-41d9-a4a7-53c02113da06",
+      "name": "When chat message received",
+      "webhookId": "a93d6a35-29f8-448a-a6df-d399fe32cdad"
+    },
+    {
+      "parameters": {
+        "model": "llama-3.1-8b-instant",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        -720,
+        -288
+      ],
+      "id": "6c4761cb-a32b-45c2-b153-002a2116ba9f",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "vMuiQ7MLz46dfWPQ",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1f78be14-1fd2-4106-a200-4551dfad0cc1",
+              "name": "chatInput",
+              "value": "=\"what is the largest planet in solar system?\"",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1104,
+        -560
+      ],
+      "id": "59e8b130-cd91-4b8b-b4d5-d06fc0145927",
+      "name": "Edit Fields1"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -1312,
+        -608
+      ],
+      "id": "fc9cc2c7-c847-4707-98e4-e3f13617c181",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "batching": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.9,
+      "position": [
+        -832,
+        -448
+      ],
+      "id": "0d7ae1cf-a4d9-42cd-829d-51147d207907",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.1,
+      "position": [
+        -896,
+        -288
+      ],
+      "id": "5fc99dad-d727-433e-a56c-f6c57ae7c760",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "nOcvjPQrikCcdnUb",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f158810f-fa2a-48cc-b265-5c145f3d1112",
+              "name": "purchase amount",
+              "value": 9,
+              "type": "number"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -192,
+        -672
+      ],
+      "id": "631a66b3-8bd4-4fc4-ade4-167303aa0abd",
+      "name": "Edit Fields2"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "5cf27490-4635-4c6f-82c9-3172241827d6",
+              "leftValue": "={{ $json['purchase amount'] }}",
+              "rightValue": 10,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        48,
+        -672
+      ],
+      "id": "511032bc-8d84-41cf-ba65-57c1284cf77d",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "formTitle": "Submission Form",
+        "formFields": {
+          "values": [
+            {
+              "fieldLabel": "이름",
+              "fieldType": "string"
+            },
+            {
+              "fieldLabel": "이메일",
+              "fieldType": "email"
+            },
+            {
+              "fieldLabel": "문의내용",
+              "fieldType": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.formTrigger",
+      "typeVersion": 2.2,
+      "position": [
+        672,
+        -944
+      ],
+      "id": "2d5c330e-aa92-4781-89af-169edb84f268",
+      "name": "Submission",
+      "webhookId": "910fcf15-c7fe-4a31-9249-143c16ad7f44"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "65e5058c-4c0b-449f-9be1-3459dcf9e2d1",
+              "name": "이름",
+              "value": "={{ $json['이름'] }}",
+              "type": "string"
+            },
+            {
+              "id": "7eb5b58b-be81-4d81-8466-8eee89ae2adf",
+              "name": "이메일",
+              "value": "={{ $json['이메일'] }}",
+              "type": "string"
+            },
+            {
+              "id": "2530288b-7689-47cd-9602-e5ea6ad6e41f",
+              "name": "문의내용",
+              "value": "={{ $json['문의내용'] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        896,
+        -944
+      ],
+      "id": "9004da4b-c629-46d0-874b-f208d62ef6a1",
+      "name": "Kor > Eng"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1120,
+        -944
+      ],
+      "id": "3618a088-09ee-413a-9e0e-377a3c66d802",
+      "name": "ADD DATA"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        752,
+        -576
+      ],
+      "id": "cfc49123-9911-4e09-bcc0-6d49de95c804",
+      "name": "Kor > Eng v2"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        976,
+        -576
+      ],
+      "id": "76724d4a-2222-4640-b4a3-1c286d8e678a",
+      "name": "UADATE DATA"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.email }}",
+        "subject": "문의하신 내용에 대한 답변입니다.",
+        "message": "={{ $json.ai_response }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        1200,
+        -576
+      ],
+      "id": "b924757d-269c-4407-a794-de493514659c",
+      "name": "Mailing",
+      "webhookId": "a9c2f9f5-fc5c-4aee-870f-b6fa6b29bd93"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        }
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        1424,
+        -576
+      ],
+      "id": "b897ba77-3fa3-40bd-939e-fd21b87dea45",
+      "name": "UPDATE SENT"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-1.5-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        1664,
+        -672
+      ],
+      "id": "2b393b9a-fe1a-4d42-85d2-9b5faccbed67",
+      "name": "Google Gemini Chat Model1"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=다음 문의사항에 대해 친절하게 답변해주세요:\n{{ $json.question }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.4,
+      "position": [
+        1568,
+        -912
+      ],
+      "id": "2fe23510-12e8-4241-a3e6-b88f6d2d4d0e",
+      "name": "Basic LLM Chain1"
+    },
+    {
+      "parameters": {
+        "path": "13c8135c-c5d7-47b2-af43-35f563ac8e29"
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpTrigger",
+      "typeVersion": 2,
+      "position": [
+        624,
+        -1104
+      ],
+      "id": "b313eb0a-c222-4002-9086-64b5c92d4b44",
+      "name": "MCP Server Trigger",
+      "webhookId": "13c8135c-c5d7-47b2-af43-35f563ac8e29"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "당신은 개발자를 돕는 전문 AI 에이전트입니다. 사용자가 최신 라이브러리, API, 패키지 관련 질문을 하면 반드시 'search_context7_docs' 툴을 사용하여 최신 문서를 조회한 후, 해당 정보를 바탕으로 정확한 코드와 답변을 생성하세요."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        944,
+        -256
+      ],
+      "id": "b5c416b5-e21f-4dfc-8951-d755b46f9481",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "url": "https://api.context7.com/v1/search",
+        "sendQuery": true,
+        "parametersQuery": {
+          "values": [
+            {}
+          ]
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolHttpRequest",
+      "typeVersion": 1.1,
+      "position": [
+        1440,
+        -16
+      ],
+      "id": "a874ee5f-bcc0-44c7-a68a-8fef707f75aa",
+      "name": "Context7 Documentation API"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-1.5-flash",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        736,
+        0
+      ],
+      "id": "490fdf4c-e21e-4389-969f-cd0a43f7d97a",
+      "name": "Google Gemini Chat Model2"
+    },
+    {
+      "parameters": {
+        "fieldsToAggregate": {
+          "fieldToAggregate": [
+            {}
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        -608,
+        176
+      ],
+      "id": "cc7198ed-23b9-4ab8-9072-56b8f55fc55c",
+      "name": "Aggregate"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -240,
+        176
+      ],
+      "id": "a1d7b5e6-b22c-4b6d-a961-69d528053422",
+      "name": "Edit Fields3"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "On form submission": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        []
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        []
+      ]
+    },
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields1": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields2": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Submission": {
+      "main": [
+        [
+          {
+            "node": "Kor > Eng",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Kor > Eng": {
+      "main": [
+        [
+          {
+            "node": "ADD DATA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ADD DATA": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Kor > Eng v2": {
+      "main": [
+        [
+          {
+            "node": "UADATE DATA",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "UADATE DATA": {
+      "main": [
+        [
+          {
+            "node": "Mailing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Mailing": {
+      "main": [
+        [
+          {
+            "node": "UPDATE SENT",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain1": {
+      "main": [
+        [
+          {
+            "node": "Kor > Eng v2",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Context7 Documentation API": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model2": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "09f9ad39-b2b5-4f9d-9d1a-50b68d3ba7fb",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "12ce209bf390e75c0c230063a744090d004b51446e91b28d5f669aafae37e6b3"
+  },
+  "nodeGroups": [],
+  "id": "81jPNCwVF6iA0Ig8",
+  "tags": []
+}
