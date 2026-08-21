@@ -1,3 +1,5 @@
+### Application Deployment (12 hours, 4 weeks)
+
 1. program language Build (compile, link,..)
 2. Software configuration tool : git
 3. Docker (Build vs. Docker) : github codespace, WSL, Ubuntu
