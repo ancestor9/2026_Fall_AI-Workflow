@@ -1,7 +1,7 @@
 ### Basic course : Application Deployment (9 hours, 3 weeks)
 1. program language Build (compile, link,..)
 2. Software configuration tool : git
-3. Docker (Build vs. Docker) : github codespace, WSL, Ubuntu, virtual environment
+3. Docker (Build vs. Docker) : Image/Container, github codespace, WSL, Ubuntu, virtual environment
 4. CI/CD : github actions + hugging space
 
 ### Intermediate course : AI Workflow (15 hours, 5 weeks)
