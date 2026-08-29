@@ -28,7 +28,7 @@
 
 ### 5. AI Workflow_n8n (노코드 기반 AI 자동화)
 
-- **n8n 환경 구축**: WSL2, Ubuntu, Docker Desktop을 활용하여 로컬 환경에 n8n 서버를 설치하고 평생 무료로 사용하는 방법
+- **n8n 환경 구축**: WSL2, Ubuntu, Docker Desktop을 활용하여 로컬 환경에 n8n 서버를 설치하고 무료로 사용하는 방법
 - **노드(Node) 기반 설계**: 실행 시점인 Entry point, 데이터 가공인 Function, 결과 생성인 Exit point 노드를 조합하여 복잡한 자동화 시나리오 구성
 - **RAG 파이프라인**: 구글 드라이브의 문서 변경을 감지하여 텍스트를 추출하고, Supabase 벡터 DB에 저장한 뒤 AI 에이전트가 이를 검색하여 답변하는 RAG 시스템 구현
 
