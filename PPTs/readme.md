@@ -13,7 +13,7 @@
 
 ### Advanced course : Langchain Application (21 hours, 7 weeks)
 
-![Learning Lanchain](https://github.com/ancestor9/2026_Fall_Learning-Langchain-AI-Agent)
+[Learning Lanchain](https://github.com/ancestor9/2026_Fall_Learning-Langchain-AI-Agent)
 
 9. langchain/langgraph : RAG(Retrieval Augmented Generation)
 10. google Agent SDK
