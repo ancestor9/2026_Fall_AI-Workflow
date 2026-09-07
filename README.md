@@ -12,7 +12,7 @@
 
 - **자동화의 본질**: 데이터 기반의 예측 가능한 실행 세트를 통해 사람이 반복하는 작업을 최소화하는 과정 이해
 - **워크플로우 구성 요소**: 실행을 시작하는 Trigger, 데이터를 선별하는 Filter, 실제 작업을 수행하는 Action의 구조 학습
-- **FastAPI & 스케줄링**: Python 기반의 FastAPI와 BackgroundScheduler를 사용하여 10초마다 작업을 수행하는 로컬 제어 서버 'Hermes Cron' 개발 실습
+- **[FastAPI & 스케줄링](https://github.com/ancestor9/2026_Fall_AI-Workflow/blob/main/scripts/main_01.py)**: Python 기반의 FastAPI와 BackgroundScheduler를 사용하여 10초마다 작업을 수행하는 로컬 제어 서버 'Hermes Cron' 개발 실습
 
 ### 3. Workflow Orchestration Framework (데이터 파이프라인 관리)
 
