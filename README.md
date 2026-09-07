@@ -25,11 +25,11 @@
 - **n8n 환경 구축**: WSL2, Ubuntu, Docker Desktop을 활용하여 로컬 환경에 n8n 서버를 설치하고 무료로 사용하는 방법
 - [n8n 노코드 자동화 한글 가이드북](https://wikidocs.net/book/18092)
 - **노드(Node) 기반 설계**: 실행 시점인 Entry point, 데이터 가공인 Function, 결과 생성인 Exit point 노드를 조합하여 복잡한 자동화 시나리오 구성
-- **RAG 파이프라인**: 구글 드라이브의 문서 변경을 감지하여 텍스트를 추출하고, Supabase 벡터 DB에 저장한 뒤 AI 에이전트가 이를 검색하여 답변하는 RAG 시스템 구현
+- **RAG 파이프라인**: 구글 드라이브의 문서 변경을 감지하여 텍스트를 추출하고, [Supabase](https://supabase.com/) 벡터 DB에 저장한 뒤 AI 에이전트가 이를 검색하여 답변하는 RAG 시스템 구현
 
 ### 5. AI Agent Coding (AI 코딩 에이전트와 실무)
 
-- **Cline (AI 개발 어시스턴트)**: VS Code 플러그인인 Cline을 설치하여 LLM이 직접 코드를 작성, 수정, 실행하고 디버깅까지 수행하는 에이전트 환경 구축
+- **[Cline](https://wikidocs.net/278941) (AI 개발 어시스턴트)**: VS Code 플러그인인 Cline을 설치하여 LLM이 직접 코드를 작성, 수정, 실행하고 디버깅까지 수행하는 에이전트 환경 구축
 - **Vibe Coding (바이브 코딩)**: 요구사항을 텍스트로 명확히 정의(Spec Coding)하고 AI와 대화하며 웹 페이지 구조와 스타일을 잡아가는 새로운 개발 방식 실습
 - **MCP (Model Context Protocol)**: AI 에이전트가 브라우저 제어 등 외부 도구와 통신할 때 사용하는 특화된 프로토콜인 MCP의 개념과 직접 서버를 구축하는 방법 학습
 
