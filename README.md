@@ -17,8 +17,8 @@
 ### 3. Workflow Orchestration Framework (데이터 파이프라인 관리)
 
 - **오케스트레이션 도구**: 복잡한 데이터 파이프라인을 효율적으로 관리하기 위한 Prefect, Dagster, Airflow 프레임워크 소개
-- **Prefect 실습**: `@task`와 `@flow` 데코레이터를 사용하여 작업을 정의하고, `.map()` 기능을 통해 여러 데이터를 병렬로 자동 처리하는 워크플로우 구축
-- **Airflow 실습**: 데이터를 자산(Asset) 단위로 관리하는 Asset-based Orchestration 개념을 익히고, 데이터 저장 경로 정의 및 웹 대시보드 모니터링 수행
+- **[Prefect](https://velog.io/@hsh/series/prefect) 실습**: `@task`와 `@flow` 데코레이터를 사용하여 작업을 정의하고, `.map()` 기능을 통해 여러 데이터를 병렬로 자동 처리하는 워크플로우 구축
+- **[Airflow](https://github.com/ancestor9/airflow) 실습**: 데이터를 자산(Asset) 단위로 관리하는 Asset-based Orchestration 개념을 익히고, 데이터 저장 경로 정의 및 웹 대시보드 모니터링 수행
 
 ### 4. AI Workflow_n8n (노코드 기반 AI 자동화)
 
