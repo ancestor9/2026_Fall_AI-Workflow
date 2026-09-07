@@ -3,7 +3,7 @@
 애플리케이션 배포 기초부터 AI 워크플로우 자동화, 최신 AI 에이전트 개념과 실습까지 단계적으로 다루는 커리큘럼입니다.
 
 ### 1. App Deployment (애플리케이션 배포 기초)
-
+- [App Deployment](https://github.com/ancestor9/2026_Fall_AI-Workflow/tree/main/PPTs)
 - **Git & GitHub 기본**: 계정 생성, Git 설치 및 GitHub Desktop을 활용한 코드 버전 관리와 원격 저장소 업로드 방법 습득
 - **CI/CD 파이프라인 구축**: 코드 변경 시 자동으로 테스트 및 배포되는 CI/CD 개념을 이해하고, GitHub Actions를 통해 Python+Gradio 앱을 Hugging Face Spaces에 자동 배포하는 실습 수행
 - **Docker 컨테이너화**: 애플리케이션을 가상화된 컨테이너로 패키징하여 배포하는 법을 익히고, GitHub Codespaces 클라우드 환경에서 Docker 환경 구축 실습
