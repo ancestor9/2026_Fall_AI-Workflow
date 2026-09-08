@@ -1,0 +1,200 @@
+{
+  "name": "Practices",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -768,
+        -48
+      ],
+      "id": "d26d0321-500a-4f5d-a320-0d2e1dc55392",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1bxZS3UIh71d6ZeVokzQGcwqPlc3P_VPqvY2FyBD-WJk",
+          "mode": "list",
+          "cachedResultName": "n8n demo data",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1bxZS3UIh71d6ZeVokzQGcwqPlc3P_VPqvY2FyBD-WJk/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1bxZS3UIh71d6ZeVokzQGcwqPlc3P_VPqvY2FyBD-WJk/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "first_name": "sanggoo",
+            "last_name": "cho",
+            "email": "ancestorcho30@gmail.com",
+            "company": "KBU",
+            "age": "25"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "first_name",
+              "displayName": "first_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "last_name",
+              "displayName": "last_name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "company",
+              "displayName": "company",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "age",
+              "displayName": "age",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -512,
+        -240
+      ],
+      "id": "67dee884-ba4b-4216-ae7f-f17ac4a7b283",
+      "name": "Append row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "nGa4qb9gkBhjNgP2",
+          "name": "Google Sheets account 2"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "value": "vpPl6axfx8cSUPxa",
+          "mode": "list",
+          "cachedResultName": "employees",
+          "cachedResultUrl": "/projects/oNm0pKDBsUXCINSg/datatables/vpPl6axfx8cSUPxa"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "name": "ancestor9",
+            "gender": "male",
+            "age": "21"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "gender",
+              "displayName": "gender",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "age",
+              "displayName": "age",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        -512,
+        -48
+      ],
+      "id": "74c85bf6-eebb-4d32-8c4d-f45130b873ba",
+      "name": "Insert row"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Insert row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "0187baa9-acc0-45eb-8e6b-ca8b14baf890",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "12ce209bf390e75c0c230063a744090d004b51446e91b28d5f669aafae37e6b3"
+  },
+  "nodeGroups": [],
+  "id": "NkbX6OcZQ0LPRKOt",
+  "tags": []
+}
