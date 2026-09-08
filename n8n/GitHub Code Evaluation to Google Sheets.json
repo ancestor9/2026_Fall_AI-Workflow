@@ -1,0 +1,337 @@
+{
+  "name": "GitHub Code Evaluation to Google Sheets",
+  "nodes": [
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1zdQU6oIxu2_phLFUCufDbHd5G79agjEWFkJH2QCoZnA/edit?gid=0#gid=0",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "eval_1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1zdQU6oIxu2_phLFUCufDbHd5G79agjEWFkJH2QCoZnA/edit#gid=0"
+        },
+        "options": {}
+      },
+      "id": "aeaf9a70-360d-43b7-9b19-701747a661a8",
+      "name": "Google Sheets Read",
+      "type": "n8n-nodes-base.googleSheetsTrigger",
+      "typeVersion": 1,
+      "position": [
+        -224,
+        -32
+      ],
+      "credentials": {
+        "googleSheetsTriggerOAuth2Api": {
+          "id": "uFrRWB4W1quE5OXA",
+          "name": "Google Sheets Trigger account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "for (const item of $input.all()) {\n  // 공백 및 맨 끝의 마침표(.) 제거\n  let url = (item.json['github_url'] || '').trim().replace(/\\.+$/, '');\n  \n  if (url.includes('github.com') && url.includes('/blob/')) {\n    item.json.rawUrl = url\n      .replace('github.com', 'raw.githubusercontent.com')\n      .replace('/blob/', '/');\n  } else {\n    const match = url.match(/github\\.com\\/([^/]+)\\/([^/]+)/);\n    if (match) {\n      item.json.rawUrl = `https://raw.githubusercontent.com/${match[1]}/${match[2].replace('.git', '')}/main/README.md`;\n    } else {\n      item.json.rawUrl = '';\n    }\n  }\n}\nreturn $input.all();"
+      },
+      "id": "43d6e52a-7449-4b36-b411-a436e8afeee3",
+      "name": "Parse GitHub URL",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -64,
+        -128
+      ]
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.rawUrl }}",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "User-Agent",
+              "value": "n8n-app"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "dc2579bf-13bd-4d0c-b0f6-ed90b9872682",
+      "name": "Fetch GitHub README/Code",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [
+        80,
+        -16
+      ]
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "==다음은 GitHub에서 가져온 코드 내용입니다:\n\n{{ $json.cleanCode }}\n\n위 코드를 심층 분석하여 평가해 주세요.\n반드시 아래 JSON 형식으로만 응답해야 합니다. 다른 서론이나 설명은 포함하지 마세요.\n\n{\n  \"grade\": 85.5,\n  \"comments\": \"코드의 전반적인 구조와 RAG 구현이 우수함. 단, 예외 처리가 일부 누락됨.\"\n}\n\n- grade: 코드 완성도, 논리성, 주석 등을 종합한 실수 형태의 점수 (0.0 ~ 100.0)\n- comments: 코드 평가 요약 텍스트",
+        "messages": {
+          "messageValues": [
+            {
+              "message": "="
+            }
+          ]
+        }
+      },
+      "id": "8d73c256-4405-4b23-be09-f60490b82376",
+      "name": "Evaluate Code Completeness",
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.4,
+      "position": [
+        416,
+        -16
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "https://docs.google.com/spreadsheets/d/1zdQU6oIxu2_phLFUCufDbHd5G79agjEWFkJH2QCoZnA/edit?gid=0#gid=0",
+          "mode": "url"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "eval_1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1zdQU6oIxu2_phLFUCufDbHd5G79agjEWFkJH2QCoZnA/edit#gid=0"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "comments": "={{ $json.comments }}}",
+            "grade": "={{ $json.grade }}",
+            "row_number": "={{ $json.row_number }}"
+          },
+          "matchingColumns": [
+            "row_number"
+          ],
+          "schema": [
+            {
+              "id": "name",
+              "displayName": "name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "github_url",
+              "displayName": "github_url",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "grade",
+              "displayName": "grade",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "comments",
+              "displayName": "comments",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "dee46b98-0039-4715-899c-0b85c2ac9623",
+      "name": "Google Sheets Update",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        880,
+        -16
+      ],
+      "alwaysOutputData": false,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "uMvuZtW2OYolWJ8Y",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "model": "llama-3.1-8b-instant",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGroq",
+      "typeVersion": 1,
+      "position": [
+        304,
+        144
+      ],
+      "id": "6265d39f-5222-4764-a511-17053340e1be",
+      "name": "Groq Chat Model",
+      "credentials": {
+        "groqApi": {
+          "id": "vMuiQ7MLz46dfWPQ",
+          "name": "Groq account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "jsCode": "for (const item of $input.all()) {\n  let rawText = item.json.data || '';\n  let cleanCode = '';\n\n  try {\n    // ipynb JSON 파싱 후 코드/마크다운 셀 텍스트만 추출\n    const notebook = JSON.parse(rawText);\n    if (notebook.cells) {\n      cleanCode = notebook.cells\n        .map(cell => Array.isArray(cell.source) ? cell.source.join('') : cell.source)\n        .join('\\n\\n');\n    }\n  } catch (e) {\n    cleanCode = rawText;\n  }\n\n  // 안전하게 8,000자로 제한 (약 2,000 토큰 소모)\n  item.json.cleanCode = cleanCode.slice(0, 2000);\n}\nreturn $input.all();"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        240,
+        -128
+      ],
+      "id": "2f5f8f23-ee7d-433f-900b-0149313142f2",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "jsCode": "const originalData = $('Google Sheets Read').all();\n\nreturn $input.all().map((item, index) => {\n  let grade = 0;\n  let comments = item.json.text || '';\n\n  try {\n    const cleaned = item.json.text.replace(/```json|```/g, '').trim();\n    const parsed = JSON.parse(cleaned);\n    grade = parsed.grade;\n    comments = parsed.comments;\n  } catch (e) {\n    // JSON 파싱 실패 시 예외 처리\n  }\n\n  return {\n    json: {\n      row_number: originalData[index]?.json.row_number || (index + 2),\n      name: originalData[index]?.json.name || '',\n      grade: grade,\n      comments: comments\n    }\n  };\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        704,
+        -112
+      ],
+      "id": "26d9b08f-e115-4ae3-8736-f168f3eb9d5b",
+      "name": "Code in JavaScript1"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Google Sheets Read": {
+      "main": [
+        [
+          {
+            "node": "Parse GitHub URL",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Parse GitHub URL": {
+      "main": [
+        [
+          {
+            "node": "Fetch GitHub README/Code",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Fetch GitHub README/Code": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Evaluate Code Completeness": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Groq Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Evaluate Code Completeness",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Evaluate Code Completeness",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "Google Sheets Update",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "60c896ec-3a9c-465f-aec0-642449dc874e",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "12ce209bf390e75c0c230063a744090d004b51446e91b28d5f669aafae37e6b3"
+  },
+  "nodeGroups": [],
+  "id": "1NlUCaBXfq17ECxm",
+  "tags": []
+}
