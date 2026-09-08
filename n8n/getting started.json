@@ -1,0 +1,253 @@
+{
+  "name": "getting started",
+  "nodes": [
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        -336,
+        16
+      ],
+      "id": "dcc01532-851f-4024-b8d6-3f9aa361a55f",
+      "name": "When clicking ‘Execute workflow’"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "10P1eeaVGB7rqGY-n9yJRLKAHMSb6KptYIjPOE15HaH4",
+          "mode": "list",
+          "cachedResultName": "n8n demo data",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/10P1eeaVGB7rqGY-n9yJRLKAHMSb6KptYIjPOE15HaH4/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "시트1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/10P1eeaVGB7rqGY-n9yJRLKAHMSb6KptYIjPOE15HaH4/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -96,
+        16
+      ],
+      "id": "232235ec-4b9b-4a5f-92f6-2b416ec27af9",
+      "name": "Get row(s) in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "uMvuZtW2OYolWJ8Y",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "01fa96b9-06e6-49a8-8b97-e370bb7ed587",
+              "leftValue": "={{ $json.company }}",
+              "rightValue": 0,
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "a7b0c22e-cd60-4dba-8f68-623d526fdec8",
+              "leftValue": "={{ $json.age }}",
+              "rightValue": 20,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.3,
+      "position": [
+        112,
+        16
+      ],
+      "id": "37c939ea-9cf8-48e0-a892-b0269394524b",
+      "name": "Filter"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "a93c785e-ef4b-4471-82e5-59db8d8df584",
+              "name": "full_name",
+              "value": "={{ $json.first_name }} {{ $json.last_name }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        320,
+        16
+      ],
+      "id": "760db4ee-76d7-49fd-b7a4-4fec3cc0e7f3",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {}
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -336,
+        208
+      ],
+      "id": "fddddfb9-13b5-4959-bbb1-a71cb7d552ad",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "246e2633-6dbb-4adb-a61c-6c515ba381de",
+              "leftValue": "={{ $json.age }}",
+              "rightValue": 30,
+              "operator": {
+                "type": "number",
+                "operation": "lte"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        256,
+        208
+      ],
+      "id": "6e35fbab-7ed8-4fa6-a198-a2ee97143ef5",
+      "name": "If"
+    },
+    {
+      "parameters": {},
+      "type": "n8n-nodes-base.noOp",
+      "typeVersion": 1,
+      "position": [
+        528,
+        16
+      ],
+      "id": "e1518b09-76c3-4aa8-87d9-09ceaefcc1ca",
+      "name": "No Operation, do nothing"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When clicking ‘Execute workflow’": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "Get row(s) in sheet",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "No Operation, do nothing",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate",
+    "availableInMCP": false
+  },
+  "versionId": "48d60b9e-e06c-46b1-a49c-931715e476d4",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "12ce209bf390e75c0c230063a744090d004b51446e91b28d5f669aafae37e6b3"
+  },
+  "nodeGroups": [],
+  "id": "eAOWzNqFYIUkfFnH",
+  "tags": []
+}
