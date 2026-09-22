@@ -175,9 +175,8 @@
         "toolDescription": "Retrieve internal company documents related to policies, rules, or procedures based on semantic similarity to the question.",
         "tableName": {
           "__rl": true,
-          "value": "documents",
           "mode": "list",
-          "cachedResultName": "documents"
+          "value": "documents"
         },
         "options": {}
       },
@@ -247,6 +246,52 @@
         "googlePalmApi": {
           "id": "nOcvjPQrikCcdnUb",
           "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "65f89a6a-6a92-450e-9650-670e959484fe",
+              "name": "output",
+              "value": "={{ $json.output }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.5,
+      "position": [
+        -144,
+        48
+      ],
+      "id": "8cc6db6d-f75a-496d-8e8b-0056b15754a4",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "sendTo": "ancestor9@kbu.ac.kr",
+        "subject": "논문 요약",
+        "emailType": "text",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        80,
+        48
+      ],
+      "id": "4894ca63-e570-4ab1-91e8-ebc02ce76841",
+      "name": "Send a message",
+      "webhookId": "ed205e76-743b-45a8-96bb-2dd3dbba4bf5",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "rpEcwuvSvyGKaaYQ",
+          "name": "Gmail account"
         }
       }
     }
@@ -362,6 +407,28 @@
           }
         ]
       ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": false,
@@ -370,7 +437,7 @@
     "binaryMode": "separate",
     "availableInMCP": false
   },
-  "versionId": "7cc61484-f9a0-43e7-ae6f-15bb4f01f959",
+  "versionId": "b4f88e1e-de7e-41c6-b0da-29c913d12fbd",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "12ce209bf390e75c0c230063a744090d004b51446e91b28d5f669aafae37e6b3"
