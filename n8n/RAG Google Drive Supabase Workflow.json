@@ -8,8 +8,8 @@
       "type": "@n8n/n8n-nodes-langchain.chatTrigger",
       "typeVersion": 1.4,
       "position": [
-        -848,
-        48
+        -1088,
+        -48
       ],
       "id": "e5d93abd-a2da-4d8f-9f6b-5267fd72e10c",
       "name": "When chat message received",
@@ -22,8 +22,8 @@
       "type": "@n8n/n8n-nodes-langchain.agent",
       "typeVersion": 3.1,
       "position": [
-        -544,
-        48
+        -848,
+        -48
       ],
       "id": "a6eb57bf-0e09-4dfd-a836-8cd0b5f57180",
       "name": "AI Agent"
@@ -51,8 +51,8 @@
       "type": "n8n-nodes-base.googleDriveTrigger",
       "typeVersion": 1,
       "position": [
-        -1808,
-        48
+        -1824,
+        -48
       ],
       "id": "04f26f9e-92e5-4092-a3e8-3a617d5a3825",
       "name": "Google Drive Trigger",
@@ -76,8 +76,8 @@
       "type": "n8n-nodes-base.googleDrive",
       "typeVersion": 3,
       "position": [
-        -1552,
-        48
+        -1648,
+        -48
       ],
       "id": "efac18b6-c108-4b20-b01d-93b7f001528a",
       "name": "Download file",
@@ -102,8 +102,8 @@
       "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
       "typeVersion": 1.3,
       "position": [
-        -1296,
-        48
+        -1472,
+        -48
       ],
       "id": "70c44462-b038-4caf-b7f7-b9e914a2ac1e",
       "name": "Supabase Vector Store",
@@ -119,8 +119,8 @@
       "type": "@n8n/n8n-nodes-langchain.embeddingsGoogleGemini",
       "typeVersion": 1,
       "position": [
-        -1392,
-        304
+        -1568,
+        208
       ],
       "id": "701967ef-47d5-471c-919f-6b3db8c0fcfb",
       "name": "Embeddings Google Gemini",
@@ -150,8 +150,8 @@
       "type": "@n8n/n8n-nodes-langchain.documentDefaultDataLoader",
       "typeVersion": 1.1,
       "position": [
-        -1184,
-        304
+        -1360,
+        208
       ],
       "id": "cab42070-1632-4fe0-9bef-f60867b6d736",
       "name": "Default Data Loader"
@@ -163,8 +163,8 @@
       "type": "@n8n/n8n-nodes-langchain.textSplitterRecursiveCharacterTextSplitter",
       "typeVersion": 1,
       "position": [
-        -1264,
-        496
+        -1440,
+        400
       ],
       "id": "0143606b-5c0e-4b5d-badc-324645e82aa7",
       "name": "Recursive Character Text Splitter"
@@ -183,8 +183,8 @@
       "type": "@n8n/n8n-nodes-langchain.vectorStoreSupabase",
       "typeVersion": 1.3,
       "position": [
-        -336,
-        288
+        -640,
+        192
       ],
       "id": "447b01b8-81a2-4ce5-8f97-b267d8dea596",
       "name": "Supabase Vector Store1",
@@ -196,23 +196,6 @@
       }
     },
     {
-      "parameters": {},
-      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
-      "typeVersion": 1.4,
-      "position": [
-        -544,
-        272
-      ],
-      "id": "1fca54af-ab3d-4197-a5f4-7475bfe82056",
-      "name": "Postgres Chat Memory",
-      "credentials": {
-        "postgres": {
-          "id": "Gn2Y4ALMLdfzhcFn",
-          "name": "Postgres account"
-        }
-      }
-    },
-    {
       "parameters": {
         "modelName": "models/gemini-3.5-flash-lite",
         "options": {}
@@ -220,8 +203,8 @@
       "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
       "typeVersion": 1,
       "position": [
-        -704,
-        256
+        -1008,
+        160
       ],
       "id": "357575fc-738e-4ddc-97bf-53a4cff63131",
       "name": "Google Gemini Chat Model2",
@@ -237,8 +220,8 @@
       "type": "@n8n/n8n-nodes-langchain.embeddingsGoogleGemini",
       "typeVersion": 1,
       "position": [
-        -384,
-        480
+        -688,
+        384
       ],
       "id": "67ab3d4e-e7ce-465a-94b4-19056929cc32",
       "name": "Embeddings Google Gemini1",
@@ -266,8 +249,8 @@
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.5,
       "position": [
-        -144,
-        48
+        -512,
+        -48
       ],
       "id": "8cc6db6d-f75a-496d-8e8b-0056b15754a4",
       "name": "Edit Fields"
@@ -277,13 +260,14 @@
         "sendTo": "ancestor9@kbu.ac.kr",
         "subject": "논문 요약",
         "emailType": "text",
+        "message": "={{ $json.output }}",
         "options": {}
       },
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2.2,
       "position": [
-        80,
-        48
+        -320,
+        -48
       ],
       "id": "4894ca63-e570-4ab1-91e8-ebc02ce76841",
       "name": "Send a message",
@@ -294,6 +278,17 @@
           "name": "Gmail account"
         }
       }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        -816,
+        176
+      ],
+      "id": "f46154d0-abf7-4948-a828-d50da12cdcff",
+      "name": "Simple Memory"
     }
   ],
   "pinData": {},
@@ -375,17 +370,6 @@
         ]
       ]
     },
-    "Postgres Chat Memory": {
-      "ai_memory": [
-        [
-          {
-            "node": "AI Agent",
-            "type": "ai_memory",
-            "index": 0
-          }
-        ]
-      ]
-    },
     "Google Gemini Chat Model2": {
       "ai_languageModel": [
         [
@@ -429,6 +413,17 @@
           }
         ]
       ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
     }
   },
   "active": false,
@@ -437,7 +432,7 @@
     "binaryMode": "separate",
     "availableInMCP": false
   },
-  "versionId": "b4f88e1e-de7e-41c6-b0da-29c913d12fbd",
+  "versionId": "e7b41e09-7548-4722-bf06-a0c7ff1b73e4",
   "meta": {
     "templateCredsSetupCompleted": true,
     "instanceId": "12ce209bf390e75c0c230063a744090d004b51446e91b28d5f669aafae37e6b3"
